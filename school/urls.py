@@ -20,5 +20,6 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('schoolapp.urls'))
+    path('', include('schoolapp.urls')),
+    path('api/', include('schooolapi.urls'))
 ]+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
