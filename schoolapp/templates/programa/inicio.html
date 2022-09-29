@@ -10,17 +10,32 @@
     <p>Hora: {{ hora }}</p>
     <table>
         <tr>
+            
+        </tr>
+        {% for programa in programas %}
+            <tr>
+                
+            </tr>
+        {% endfor %}
+    </table>
+    <table class="table table-striped">
+        <tr class="table-success">
             <th>Id</th>
             <th>Nombre</th>
             <th>Descripción</th>
+            <th>Acción</th>
         </tr>
         {% for programa in programas %}
             <tr>
                 <td>{{ programa.id }}</td>
                 <td>{{ programa.nombre }}</td>
                 <td>{{ programa.descripcion }}</td>
+                <td>
+                  <a href="{% url 'actualizar-programa' programa.id %}" class="btn btn-warning">Actualizar</a>
+                  <a href="" class="btn btn-danger">Eliminar</a>
+                </td>
             </tr>
-        {% endfor %}
-    </table>
+        {% endfor%}
+    </table>    
 {% endblock contenido %}
     

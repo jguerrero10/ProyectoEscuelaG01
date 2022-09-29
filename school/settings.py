@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'schoolapp',
     'rest_framework',
     'schooolapi',
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [
@@ -160,3 +161,5 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ]
 }
+
+CSRF_COOKIE_HTTPONLY = True

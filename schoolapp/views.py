@@ -1,3 +1,4 @@
+from multiprocessing import context
 from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
@@ -5,8 +6,10 @@ from django.http import HttpResponse
 from datetime import datetime
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required, permission_required 
+from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
+from rest_framework.authtoken.models import Token
 
 from schoolapp.models import Estudiante, Profesor, Programa, LogAuditor
 from schoolapp.forms import *
@@ -182,6 +185,11 @@ def crear_profesor(request):
         contexto['boton'] = 'Guardar'
         return render(request, 'profesor/form.html', contexto)
 
+
+def listar_programa(request):
+    programas = Programa.objects.all()
+    return render(request, 'programa/inicio.html', {'programas': programas})
+
 @login_required(login_url='/login/')
 @permission_required('schoolapp.add_programa', raise_exception=True) 
 def crear_programa(request):
@@ -208,8 +216,9 @@ def crear_programa(request):
         return render(request, 'programa/form_programa.html', contexto)
 
 @login_required(login_url='/login/')
-@permission_required('schoolapp.change_programa', raise_exception=True) 
-def actualizar_program(request, id):
+@permission_required('schoolapp.change_programa', raise_exception=True)
+@csrf_exempt
+def actualizar_programa(request, id):
     try:
         programa = Programa.objects.get(id=id)
     except ObjectDoesNotExist:
@@ -227,9 +236,12 @@ def actualizar_program(request, id):
             contexto['mensaje'] = "Error al almacenar el programa"
         return render(request, 'programa/mensaje.html', contexto)
     else:
+        usuario = request.user
         programForm = ProgramaForm(instance=programa)
         contexto['programaForm'] = programForm
         contexto['boton'] = 'Editar'
         contexto['accion'] = 'Editar'
-        return render(request, 'programa/form_programa.html', contexto)
+        contexto['id'] = id
+        contexto['token'] = Token.objects.get(user=usuario)
+        return render(request, 'programa/editar.html', contexto)
     

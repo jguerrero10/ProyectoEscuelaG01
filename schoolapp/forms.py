@@ -8,6 +8,11 @@ class ProgramaForm(forms.ModelForm):
         model = Programa
         fields = '__all__'
         
+    def __init__(self, *arg, **kwargs):
+        super(ProgramaForm, self).__init__(*arg, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+        
 class EstudianteForm(forms.ModelForm):
     username = forms.CharField(label='Usuario', max_length=150, widget=forms.TextInput(
         attrs={
